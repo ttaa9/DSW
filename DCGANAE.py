@@ -18,19 +18,19 @@ class LSUNEncoder(nn.Module):
         self.main = nn.Sequential(
             # input is (nc) x 64 x 64
             nn.Conv2d(self.num_chanel, self.hidden_chanels, 4, 2, 1, bias=False),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.2, inplace=False),
             # state size. (ndf) x 32 x 32
             nn.Conv2d(self.hidden_chanels, self.hidden_chanels * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(self.hidden_chanels * 2),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.2, inplace=False),
             # state size. (ndf*2) x 16 x 16
             nn.Conv2d(self.hidden_chanels * 2, self.hidden_chanels * 4, 4, 2, 1, bias=False),
             nn.BatchNorm2d(self.hidden_chanels * 4),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.2, inplace=False),
             # state size. (ndf*4) x 8 x 8
             nn.Conv2d(self.hidden_chanels * 4, self.hidden_chanels * 8, 4, 2, 1, bias=False),
             nn.BatchNorm2d(self.hidden_chanels * 8),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.2, inplace=False),
             # state size. (ndf*8) x 4 x 4
             nn.Conv2d(self.hidden_chanels * 8, self.latent_size, 4, 1, 0, bias=False),
         )
@@ -50,15 +50,15 @@ class Discriminator(nn.Module):
         self.main1 = nn.Sequential(
             # input is (nc) x 64 x 64
             nn.Conv2d(self.num_chanel, self.hidden_chanels, 4, 2, 1, bias=False),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.2, inplace=False),
             # state size. (ndf) x 32 x 32
             nn.Conv2d(self.hidden_chanels, self.hidden_chanels * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(self.hidden_chanels * 2),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.2, inplace=False),
             # state size. (ndf*2) x 16 x 16
             nn.Conv2d(self.hidden_chanels * 2, self.hidden_chanels * 4, 4, 2, 1, bias=False),
             nn.BatchNorm2d(self.hidden_chanels * 4),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.2, inplace=False),
             nn.Conv2d(self.hidden_chanels * 4, self.hidden_chanels * 8, 4, 2, 1, bias=False),
             nn.BatchNorm2d(self.hidden_chanels * 8),
             nn.Tanh(),
@@ -72,11 +72,11 @@ class Discriminator(nn.Module):
         self.mainz = nn.Sequential(
             # input is (nc) x 64 x 64
             nn.Conv2d(self.latent_size, self.hidden_chanels * 8, 1, stride=1, bias=False),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.2, inplace=False),
             # state size. (ndf) x 32 x 32
             nn.Conv2d(self.hidden_chanels * 8, self.hidden_chanels * 8 * 4 * 4, 1, stride=1, bias=False),
             nn.BatchNorm2d(self.hidden_chanels * 8 * 4 * 4),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.2, inplace=False),
         )
         self.fc = nn.Sequential(nn.Linear(self.hidden_chanels * 8 * 4 * 4 * 2, 1), nn.Sigmoid())
 
@@ -103,19 +103,19 @@ class LSUNDecoder(nn.Module):
             # input is Z, going into a convolution
             nn.ConvTranspose2d(self.latent_size, self.hidden_chanels * 8, 4, 1, 0, bias=False),
             nn.BatchNorm2d(self.hidden_chanels * 8),
-            nn.ReLU(True),
+            nn.ReLU(False),
             # state size. (ngf*8) x 4 x 4
             nn.ConvTranspose2d(self.hidden_chanels * 8, self.hidden_chanels * 4, 4, 2, 1, bias=False),
             nn.BatchNorm2d(self.hidden_chanels * 4),
-            nn.ReLU(True),
+            nn.ReLU(False),
             # state size. (ngf*4) x 8 x 8
             nn.ConvTranspose2d(self.hidden_chanels * 4, self.hidden_chanels * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(self.hidden_chanels * 2),
-            nn.ReLU(True),
+            nn.ReLU(False),
             # state size. (ngf*2) x 16 x 16
             nn.ConvTranspose2d(self.hidden_chanels * 2, self.hidden_chanels, 4, 2, 1, bias=False),
             nn.BatchNorm2d(self.hidden_chanels),
-            nn.ReLU(True),
+            nn.ReLU(False),
             # state size. (ngf) x 32 x 32
             nn.ConvTranspose2d(self.hidden_chanels, self.num_chanel, 4, 2, 1, bias=False),
             nn.Tanh()

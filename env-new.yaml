@@ -1,0 +1,43 @@
+#Create CondaEnv via: conda env create -f env.yaml
+# Update with: conda env update -f env.yml
+# Might need to be conda env update --file env.yml --name dswd0
+
+name: dswd2
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python<3.9
+  - numpy
+  - scipy
+  - matplotlib
+  #- h5py
+  - pytorch>1.7
+  - cudatoolkit=10.1
+  - opencv
+  - scikit-image
+  - scikit-learn
+  - torchvision
+  - seaborn
+  #- faiss-gpu # cudatoolkit=10.0 -c pytorch # For CUDA10
+  #- pillow=6.1 # advertorch bug with higher versions
+  - pip
+  - pip:
+      #- Pillow==6.1
+      #- git+git://github.com/probtorch/probtorch
+    - tqdm
+      #- advertorch
+      #- pykeops
+      #- geomloss==0.2.1 # bug in 0.2.3
+      #- lambda-networks
+      #- lpips
+      #- torch-mimicry
+      #- annoy
+      #- siren-pytorch
+    - torch-fidelity
+      #- albumentations 
+    - POT
+      
+      
+#

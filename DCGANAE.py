@@ -282,7 +282,8 @@ class DCGANAE(nn.Module):
         return _mswd
 
     def compute_lossDSWD(
-        self, discriminator, optimizer, minibatch, rand_dist, num_projections, tnet, op_tnet, p=2, max_iter=100, lam=1
+        self, discriminator, optimizer, minibatch, rand_dist, num_projections, tnet, op_tnet, 
+        simul_update = False, p=2, max_iter=100, lam=1
     ):
         label = torch.full((minibatch.shape[0],1), 1,dtype=torch.float32, device=self.device)
         criterion = nn.BCELoss()
@@ -292,14 +293,24 @@ class DCGANAE(nn.Module):
         y_data, _ = discriminator(data.detach())
         errD_real = criterion(y_data, label)
         optimizer.zero_grad()
-        errD_real.backward()
-        optimizer.step()
-        y_fake, _ = discriminator(data_fake.detach())
-        label.fill_(0)
-        errD_fake = criterion(y_fake.squeeze(1), label.float())
-        optimizer.zero_grad()
-        errD_fake.backward()
-        optimizer.step()
+        if simul_update:
+            errD_real.backward()
+            #optimizer.step()
+            y_fake, _ = discriminator(data_fake.detach())
+            label.fill_(0)
+            errD_fake = criterion(y_fake.squeeze(1), label.float().squeeze(1))
+            #optimizer.zero_grad()
+            errD_fake.backward()
+            optimizer.step()
+        else:
+            errD_real.backward()
+            optimizer.step()
+            y_fake, _ = discriminator(data_fake.detach())
+            label.fill_(0)
+            errD_fake = criterion(y_fake.squeeze(1), label.float().squeeze(1))
+            optimizer.zero_grad()
+            errD_fake.backward()
+            optimizer.step()
         _, data = discriminator(data)
         _, data_fake = discriminator(data_fake)
         _dswd = distributional_sliced_wasserstein_distance(

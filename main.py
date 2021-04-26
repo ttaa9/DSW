@@ -100,6 +100,7 @@ def main():
     parser.add_argument("--cont", type=bool, help="")
     parser.add_argument("--dim", type=int, default=100, help="subspace size")
     parser.add_argument("--e", type=float, default=1000, help="R")
+    parser.add_argument("--device", type=int, help="Device number to use")
     args = parser.parse_args()
     torch.random.manual_seed(args.seed)
     if args.g == "circular":
@@ -146,8 +147,12 @@ def main():
         os.makedirs(args.outdir)
     if not (os.path.isdir(model_dir)):
         os.makedirs(model_dir)
+    # Device handling
     use_cuda = torch.cuda.is_available()
-    device = torch.device("cuda" if use_cuda else "cpu")
+    if args.device is None:
+        device_num = 0 # Default
+    device_num = args.device_num
+    device = torch.device(f"cuda:{device_num}" if use_cuda else "cpu")
     print(
         "batch size {}\nepochs {}\nAdam lr {} \n using device {}\n".format(
             args.batch_size, args.epochs, args.lr, device.type

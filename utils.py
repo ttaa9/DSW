@@ -100,7 +100,7 @@ def distributional_generalized_sliced_wasserstein_distance(
 def distributional_sliced_wasserstein_distance(
     first_samples, second_samples, num_projections, f, f_op, p=2, max_iter=10, lam=1, device="cuda"
 ):
-    embedding_dim = first_samples.size(1)
+    embedding_dim = first_samples.size(1) # 8192 by default
     pro = rand_projections(embedding_dim, num_projections).to(device)
     first_samples_detach = first_samples.detach()
     second_samples_detach = second_samples.detach()

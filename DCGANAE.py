@@ -49,17 +49,17 @@ class Discriminator(nn.Module):
         self.hidden_chanels = hidden_chanels
         self.main1 = nn.Sequential(
             # input is (nc) x 64 x 64
-            nn.Conv2d(self.num_chanel, self.hidden_chanels, 4, 2, 1, bias=False),
+            nn.Conv2d(self.num_chanel, self.hidden_chanels, 4, 2, 1, bias=False), # 64 -> 32
             nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf) x 32 x 32
-            nn.Conv2d(self.hidden_chanels, self.hidden_chanels * 2, 4, 2, 1, bias=False),
+            nn.Conv2d(self.hidden_chanels, self.hidden_chanels * 2, 4, 2, 1, bias=False), # 32 -> 16
             nn.BatchNorm2d(self.hidden_chanels * 2),
             nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf*2) x 16 x 16
-            nn.Conv2d(self.hidden_chanels * 2, self.hidden_chanels * 4, 4, 2, 1, bias=False),
+            nn.Conv2d(self.hidden_chanels * 2, self.hidden_chanels * 4, 4, 2, 1, bias=False), # 16 -> 8
             nn.BatchNorm2d(self.hidden_chanels * 4),
             nn.LeakyReLU(0.2, inplace=True),
-            nn.Conv2d(self.hidden_chanels * 4, self.hidden_chanels * 8, 4, 2, 1, bias=False),
+            nn.Conv2d(self.hidden_chanels * 4, self.hidden_chanels * 8, 4, 2, 1, bias=False), # 8 -> 4
             nn.BatchNorm2d(self.hidden_chanels * 8),
             nn.Tanh(),
         )

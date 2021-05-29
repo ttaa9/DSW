@@ -98,7 +98,8 @@ def distributional_generalized_sliced_wasserstein_distance(
 
 
 def distributional_sliced_wasserstein_distance(
-    first_samples, second_samples, num_projections, f, f_op, p=2, max_iter=10, lam=1, device="cuda"
+    first_samples, second_samples, num_projections, f, f_op, p=2, max_iter=10, lam=1, device="cuda",
+    return_cos_dist = False,
 ):
     embedding_dim = first_samples.size(1) # 8192 by default
     pro = rand_projections(embedding_dim, num_projections).to(device)
@@ -121,6 +122,7 @@ def distributional_sliced_wasserstein_distance(
         loss = reg - wasserstein_distance
         f_op.zero_grad()
         loss.backward(retain_graph=True)
+        #loss.backward(retain_graph=True)
         f_op.step()
 
     projections = f(pro)
@@ -134,6 +136,8 @@ def distributional_sliced_wasserstein_distance(
     )
     wasserstein_distance = torch.pow(torch.sum(torch.pow(wasserstein_distance, p), dim=1), 1.0 / p)
     wasserstein_distance = torch.pow(torch.pow(wasserstein_distance, p).mean(), 1.0 / p)
+    if return_cos_dist:
+        return wasserstein_distance, cos
     return wasserstein_distance
 
 

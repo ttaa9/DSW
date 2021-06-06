@@ -138,9 +138,9 @@ def distributional_sliced_wasserstein_distance(
     wasserstein_distance = torch.pow(torch.pow(wasserstein_distance, p).mean(), 1.0 / p)
 
     if return_cos_dist and return_projections:
-        return wasserstein_distance, cos, (encoded_projections, distribution_projections)
+        return wasserstein_distance, cos, (encoded_projections, distribution_projections, projections)
     elif return_projections:
-        return wasserstein_distance, (encoded_projections, distribution_projections)
+        return wasserstein_distance, (encoded_projections, distribution_projections, projections)
     elif return_cos_dist:
         return wasserstein_distance, cos
     else:
